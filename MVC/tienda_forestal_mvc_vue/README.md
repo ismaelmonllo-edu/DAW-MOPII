@@ -8,7 +8,7 @@ Vamos a estructurar la aplicación a traves de tres servicios principales:
  - #Frontend    Vue.js (Node)       Interfaz de usuario SPA (Single Page Application)
  - #DataBase    MySQL               Base de datos relacional con tus productos
 
-#Estructura de directorios
+*Estructura de directorios*
 
 tienda_forestal_mvc_vue/
 │
@@ -39,7 +39,47 @@ tienda_forestal_mvc_vue/
 └── db/
     └── init.sql
 
-La organizacion por capas en MVC queda de la siguiente forma:
+========================================================================================
+*Estructura de directorios (actualizada)*
+
+proyecto-mvc/
+│
+├── backend/
+│   ├── app.py                      # Punto de entrada Flask
+│   ├── controllers/
+│   │   └── product_controller.py   # Controlador de productos
+│   ├── models/
+│   │   └── product.py              # Modelo SQLAlchemy
+│   ├── services/
+│   │   └── product_service.py      # Lógica de negocio y queries
+│   ├── database.py                 # Configuración SQLAlchemy + conexión
+│   ├── config.py                   # Configuración general (CORS, DB, etc.)
+│   ├── requirements.txt            # Dependencias de Python
+│   ├── Dockerfile                  # Imagen Flask
+│   └── init.sql                    # Script inicial de base de datos
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ProductList.vue     # Listado + paginación
+│   │   │   └── ProductCard.vue     # Tarjeta de producto
+│   │   ├── views/
+│   │   │   └── HomeView.vue        # Pantalla principal
+│   │   ├── router/
+│   │   │   └── index.js            # Sistema de rutas SPA
+│   │   └── main.js                 # Entrada principal Vue
+│   ├── package.json                # Dependencias Frontend
+│   ├── vite.config.js              # Configuración Vite
+│   └── Dockerfile                  # Imagen Vue.js
+│
+├── docker-compose.yml               # Orquestación de servicios
+└── README.md                        # Documentación del proyecto
+
+========================================================================================
+
+========================================================================================
+
+La *organizacion por capas* en MVC queda de la siguiente forma:
 | Capa                         | Carpeta                    | Función                                                                |
 | ---------------------------- | -------------------------- | ---------------------------------------------------------------------- |
 | **Modelo (Model)**           | `backend/app/models/`      | Gestiona el acceso a la base de datos MySQL y las operaciones CRUD     |
@@ -48,62 +88,42 @@ La organizacion por capas en MVC queda de la siguiente forma:
 | **Configuración**            | `backend/app/config.py`    | Variables de entorno y parámetros de la aplicación                     |
 | **Base de datos**            | `db/init.sql`              | Scripts SQL para inicializar la base de datos y cargar productos       |
 
+========================================================================================
+| Capa                             | Ubicación              | Responsabilidad                                              | Archivos clave                                 |
+| -------------------------------- | ---------------------- | ------------------------------------------------------------ | ---------------------------------------------- |
+| **Vista (Frontend)**             | `/frontend`            | Interfaz de usuario SPA, interacción, peticiones API         | Vue components, views, router                  |
+| **Controlador (API)**            | `/backend/controllers` | Maneja las rutas, interpreta requests y construye respuestas | `product_controller.py`                        |
+| **Servicio (Lógica de negocio)** | `/backend/services`    | Reglas de filtrado, paginación, ordenación, validaciones     | `product_service.py`                           |
+| **Modelo (Datos)**               | `/backend/models`      | Estructura de tablas, mapeo ORM                              | `product.py`                                   |
+| **Persistencia (DB)**            | `mysql_db` container   | Almacenamiento definitivo de productos                       | MySQL + init.sql                               |
+| **Orquestación**                 | raíz del proyecto      | Maneja contenedores y red interna                            | `docker-compose.yml`                           |
+| **Administración DB**            | phpMyAdmin             | Panel web para la base de datos                              | [http://localhost:8081](http://localhost:8081) |
 
-El esquema de flujo de MVC con Vue.js y Flask es el siguiente:
-[Usuario / Navegador]
-        │
-        │ Interacción UI
-        ▼
-   [Frontend Vue.js]
-        │
-        │ HTTP Requests / Axios
-        ▼
-  [Backend Flask (Controlador)]
-        │
-        ├─ Consulta al Modelo (MySQL)
-        │     backend/app/models/producto_model.py
-        │
-        └─ Devuelve JSON al Frontend
-        ▼
-   [Frontend Vue.js]
-        │
-        │ Renderiza la información en componentes
-        ▼
-[Usuario visualiza productos, búsqueda y filtrado]
+========================================================================================
 
-Por lo tanto, el MVC adaptado al SPA moderno queda como:
+========================================================================================
+
+El *MVC adaptado* al SPA moderno queda como:
  - #Modelo -> producto_model.py (BD)
  - #Controlador -> producto_controller.py (rutas y lógica)
  - #Vista -> Vue.js (App.vue, Productos.vue)
+========================================================================================
+| Elemento MVC     | Implementación moderna               | Rol educativo                                                    |
+| ---------------- | ------------------------------------ | ---------------------------------------------------------------- |
+| **Modelo**       | SQLAlchemy (ORM sobre MySQL)         | Representa los productos, realiza queries, abstrae SQL           |
+| **Vista**        | Vue.js SPA (Single-Page Application) | Renderiza los datos, maneja UI reactiva y navegación sin recarga |
+| **Controlador**  | Flask REST API                       | Recibe peticiones del frontend, aplica lógica, devuelve JSON     |
+| **Comunicación** | Axios → JSON API                     | Se separa totalmente la UI del servidor                          |
+| **Renderizado**  | 100% Frontend                        | Flask **no** usa plantillas. Vue gestiona toda la interfaz       |
+| **Estado**       | Vue (local state)                    | Control de paginación, filtros, loading, errores                 |
+El proyecto usa MVC pero adaptado a una arquitectura SPA moderna: Flask actúa como *Controlador+Modelo*,
+y Vue.js como la *Vista*
 
-El esquema Docker general es:
-┌────────────────────┐
-│    Cliente Web     │
-│ (Navegador / SPA) │
-└────────┬───────────┘
-         │ HTTP (Axios)
-         ▼
-┌──────────────────────────┐
-│   Contenedor Frontend    │
-│      (Vue.js / Node)     │
-│  Servidor dev / build SPA│
-└────────┬────────────────┘
-         │ HTTP Requests
-         ▼
-┌──────────────────────────┐
-│   Contenedor Backend     │
-│      (Flask / Python)    │
-│  Controlador y Modelo    │
-└────────┬────────────────┘
-         │ TCP 3306
-         ▼
-┌──────────────────────────┐
-│   Contenedor MySQL       │
-│ Base de datos Tienda     │
-│ (productos, stock, precios) │
-└──────────────────────────┘
+========================================================================================
 
-El resumen de comunicación entre capas y contenedores es el siguiente:
+========================================================================================
+
+El resumen de *comunicación* entre capas y contenedores es el siguiente:
 | Componente          | Función                                      | Comunicación                          |
 | ------------------- | -------------------------------------------- | ------------------------------------- |
 | **Usuario**         | Interactúa con la UI                         | HTTP ↔ Frontend Vue.js                |
@@ -111,12 +131,56 @@ El resumen de comunicación entre capas y contenedores es el siguiente:
 | **Backend Flask**   | Procesa solicitudes, lógica de negocio, CRUD | SQL ↔ Contenedor MySQL                |
 | **MySQL**           | Almacena productos, stock, precios, imágenes | Consultas SQL ↔ Backend Flask         |
 
+========================================================================================
+*Comunicación interna (lógica por capas)*
+| Origen                  | Destino             | Protocolo        | Descripción                                        |
+| ----------------------- | ------------------- | ---------------- | -------------------------------------------------- |
+| **Vista (Vue.js)**      | Controlador (Flask) | HTTP REST        | Solicitudes GET con filtros, paginación, búsquedas |
+| **Controlador (Flask)** | Servicios           | Interno (Python) | Aquí se procesan filtros, orden y paginación       |
+| **Servicios**           | Modelo (SQLAlchemy) | Interno (ORM)    | Construcción de queries seguras y optimizadas      |
+| **Modelo**              | MySQL               | SQL/TCP          | Ejecución real de la consulta                      |
+
+*Comunicación entre contenedores Docker*
+| Contenedor            | Puerto | Se comunica con      | Función                                |
+| --------------------- | ------ | -------------------- | -------------------------------------- |
+| **frontend (Vue.js)** | 8080   | backend              | UI que solicita datos al servidor      |
+| **backend (Flask)**   | 5000   | mysql_db             | API que consulta y devuelve productos  |
+| **mysql_db**          | 3306   | backend + phpMyAdmin | Base de datos relacional               |
+| **phpMyAdmin**        | 8081   | mysql_db             | Gestión visual de la base de datos     |
+| **docker-compose**    | N/A    | todos                | Orquesta red, volúmenes y dependencias |
+
+*Comunicación entre contenedores*
+**Frontend → Backend**
+- Protocolo: HTTP (REST)
+- Puerto: 5000
+- Acción: Obtener datos, paginación, filtros
+
+**Backend → MySQL**
+- Protocolo: TCP
+- Puerto interno: 3306
+- Acción: Consultas SQL (SQLAlchemy)
+
+**phpMyAdmin → MySQL**
+- Protocolo: TCP
+- Puerto interno: 3306
+- Acción: Administración gráfica de la base de datos
+
+**Usuario → Frontend**
+- Protocolo: HTTP
+- Puerto: 8080
+
+**Usuario → phpMyAdmin**
+- Protocolo: HTTP
+- Puerto: 8081
+
 Hay que tener en cuenta los siguientes aspectos:
  - El frontend no toca directamente la base de datos;
    todo pasa por el backend -> mantiene la separación de capas. 
  - CORS permite que el fronted (puerto 8080) se comunique con Flask (puerto 5000) en
    Docker;
  - Docker-compose orquesta contenedores y asegura dependencias (depends_on).
+
+Los **diagramas** se muestran en el archivo *diagramas.md*.
 
 **Ejecutar el docker**
 docker-compose up --build
