@@ -93,29 +93,47 @@ def buscar():
 @producto_blueprint.route('/productos/filtrar', methods=['GET'])
 def filtrar():
     """
-    GET /api/productos/filtrar
-    Filtra productos según parámetros opcionales y devuelve resultados paginados.
-    
-    Parámetros de query:
-    - tipo, marca, precio_min, precio_max, ordenar
-    - pagina: número de página (default=1)
-    - por_pagina: cantidad de productos por página (default=10)
+    API: /api/productos/filtrar
+    Soporta filtros por:
+    - tipo, marca
+    - precio_min, precio_max
+    - ordenar (asc, desc)
+    - paginación (pagina, por_pagina)
+
+    Devuelve:
+    productos: lista de productos ya paginada
+    total_resultados: total de coincidencias sin paginación
+    pagina_actual: nº de página que se devuelve
+    total_paginas: calculado según total_resultados
     """
+
     tipo = request.args.get('tipo')
     marca = request.args.get('marca')
     precio_min = request.args.get('precio_min', type=float)
     precio_max = request.args.get('precio_max', type=float)
-    ordenar = request.args.get('ordenar')  # 'asc' o 'desc'
+    ordenar = request.args.get('ordenar')
+
     pagina = request.args.get('pagina', default=1, type=int)
     por_pagina = request.args.get('por_pagina', default=10, type=int)
 
-    resultados = producto_model.filtrar_productos(tipo, marca, precio_min, precio_max, ordenar, pagina, por_pagina)
+    datos = producto_model.filtrar_productos(
+        tipo=tipo,
+        marca=marca,
+        precio_min=precio_min,
+        precio_max=precio_max,
+        ordenar=ordenar,
+        pagina=pagina,
+        por_pagina=por_pagina
+    )
 
-    if len(resultados) == 0:
-        return jsonify({'mensaje': 'No se encontraron productos con esos criterios'}), 404
-    return jsonify({
-        'pagina': pagina,
-        'por_pagina': por_pagina,
-        'productos': resultados
-    }), 200
+    # Si no hay resultados, devolver 404
+    if datos["total_resultados"] == 0:
+        return jsonify({
+            "mensaje": "No se encontraron productos con esos criterios",
+            "total_resultados": 0,
+            "pagina_actual": pagina,
+            "total_paginas": 0,
+            "productos": []
+        }), 404
 
+    return jsonify(datos), 200

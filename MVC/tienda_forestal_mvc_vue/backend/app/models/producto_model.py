@@ -115,21 +115,27 @@ def buscar_productos(termino):
 
 
 def filtrar_productos(tipo=None, marca=None, precio_min=None, precio_max=None, ordenar=None, pagina=1, por_pagina=10):
-    """
-    Filtra productos según varios criterios y permite paginación.
-    
+ """
+    Filtra productos según varios criterios, permite paginación y devuelve:
+    - productos paginados
+    - total_resultados
+    - total_paginas
+    - pagina_actual
+
     Parámetros:
-    - tipo: filtrar por tipo de producto (ej. 'motosierra')
-    - marca: filtrar por marca
-    - precio_min / precio_max: rango de precios
-    - ordenar: 'asc' o 'desc' por precio
-    - pagina: número de página (1 por defecto)
-    - por_pagina: cantidad de productos por página (10 por defecto)
+    tipo: filtrar por tipo  (string)
+    marca: filtrar por marca (string)
+    precio_min / precio_max: valores numéricos
+    ordenar: 'asc' o 'desc' por precio
+    pagina: número de página actual
+    por_pagina: nº de productos por página (10 por defecto)
     """
     conexion = obtener_conexion()
     cursor = conexion.cursor(MySQLdb.cursors.DictCursor)
 
-    # Comenzamos construyendo la consulta base
+    # ===========================
+    # 1. Construir base de la consulta
+    # ===========================
     query = "SELECT * FROM productos WHERE 1=1"
     params = []
 
@@ -137,7 +143,7 @@ def filtrar_productos(tipo=None, marca=None, precio_min=None, precio_max=None, o
     if tipo:
         query += " AND tipo = %s"
         params.append(tipo)
-    if marca:
+        if marca:
         query += " AND marca = %s"
         params.append(marca)
     if precio_min:
@@ -147,18 +153,59 @@ def filtrar_productos(tipo=None, marca=None, precio_min=None, precio_max=None, o
         query += " AND precio <= %s"
         params.append(precio_max)
 
-    # Ordenación opcional
+
+    # ===========================
+    # 2. Obtener TOTAL DE RESULTADOS (sin LIMIT)
+    # ===========================
+    query_count = f"SELECT COUNT(*) AS total {base_query}"
+    cursor.execute(query_count, params)
+    total_resultados = cursor.fetchone()['total']
+
+    # Evitar división por 0
+    if total_resultados == 0:
+        return {
+            "productos": [],
+            "total_resultados": 0,
+            "pagina_actual": pagina,
+            "total_paginas": 0
+        }
+
+    # ===========================
+    # 3. Calcular total de páginas
+    # ===========================
+    total_paginas = math.ceil(total_resultados / por_pagina)
+
+    # Si la página pedida es mayor que la última, ajustarla
+    if pagina > total_paginas:
+        pagina = total_paginas
+
+    # ===========================
+    # 4. Construir consulta FINAL con LIMIT y OFFSET
+    # ===========================
+    query_final = "SELECT * " + base_query
+
+    # Ordenación por precio
     if ordenar == "asc":
-        query += " ORDER BY precio ASC"
+        query_final += " ORDER BY precio ASC"
     elif ordenar == "desc":
-        query += " ORDER BY precio DESC"
+        query_final += " ORDER BY precio DESC"
 
-    # --- PAGINACIÓN ---
+    # Paginación
     offset = (pagina - 1) * por_pagina
-    query += " LIMIT %s OFFSET %s"
-    params.extend([por_pagina, offset])
+    query_final += " LIMIT %s OFFSET %s"
+    params_final = params + [por_pagina, offset]
 
-    cursor.execute(query, params)
-    resultados = cursor.fetchall()
+    cursor.execute(query_final, params_final)
+    productos = cursor.fetchall()
+
     conexion.close()
-    return resultados
+
+    # ===========================
+    # 5. Devolver respuesta estructurada
+    # ===========================
+    return {
+        "productos": productos,
+        "total_resultados": total_resultados,
+        "pagina_actual": pagina,
+        "total_paginas": total_paginas
+    }
