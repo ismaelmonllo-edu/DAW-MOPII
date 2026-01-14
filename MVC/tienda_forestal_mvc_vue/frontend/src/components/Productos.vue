@@ -52,11 +52,16 @@
          =============================== -->
     <div v-else class="grid">
       <div v-for="p in productos" :key="p.id" class="card">
-        <img :src="'/img/' + p.imagen" :alt="p.nombre" />
+        <img
+          :src="'/img/' + p.imagen"
+          :alt="p.nombre"
+          @error="(e) => e.target.src = 'https://via.placeholder.com/400x300/4a7c59/ffffff?text=' + encodeURIComponent(p.tipo)"
+        />
         <h3>{{ p.nombre }}</h3>
         <p>{{ p.descripcion }}</p>
-        <strong>{{ p.precio }} €</strong><br>
-        <small>Stock: {{ p.stock }}</small>
+        <strong>{{ parseFloat(p.precio).toFixed(2) }} €</strong><br>
+        <small>Stock: {{ p.stock }}</small><br>
+        <small class="tipo">{{ p.tipo }} - {{ p.marca }}</small>
       </div>
     </div>
 
@@ -239,12 +244,43 @@ cargarProductos()
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .card img {
   width: 100%;
   height: 150px;
   object-fit: cover;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+}
+
+.card h3 {
+  margin: 0.5rem 0;
+  color: #1e4620;
+  font-size: 1.1rem;
+}
+
+.card p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+
+.card strong {
+  color: #2e7d32;
+  font-size: 1.3rem;
+}
+
+.card .tipo {
+  color: #888;
+  text-transform: capitalize;
 }
 
 .filtros {
@@ -254,13 +290,55 @@ cargarProductos()
   gap: 0.5rem;
 }
 
+.filtros input,
+.filtros select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.search-input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 0.5rem;
+  min-width: 250px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.paginacion {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .paginacion button {
   margin: 0 4px;
   padding: 0.5rem 0.8rem;
 }
 
 button.activo {
-  background-color: #4CAF50;
+  background-color: #1e4620;
   color: white;
   font-weight: bold;
 }

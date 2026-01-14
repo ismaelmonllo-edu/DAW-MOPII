@@ -64,12 +64,29 @@ export async function buscarProductos(termino) {
   return res.data; // array simple
 }
 
-/**
+/* ============================================================
+ * ⭐ FUNCIÓN: obtenerProductos
+ * ------------------------------------------------------------
  * GET /api/productos
+ * Obtiene todos los productos sin filtros ni paginación.
+ *
+ * IMPORTANTE: El backend devuelve { status, message, data }
+ * por lo que extraemos .data.data para obtener el array de productos
+ * ============================================================ */
+export async function obtenerProductos() {
+  const res = await axios.get(`/api/productos`);
+  // El endpoint /api/productos devuelve: { status: "success", message: "OK", data: [...] }
+  // Necesitamos extraer el array de productos que está en res.data.data
+  return res.data.data;
+}
+
+/**
+ * GET /api/productos (alias de obtenerProductos)
  */
 export async function listarTodos() {
   const res = await axios.get(`/api/productos`);
-  return res.data;
+  // Devolvemos res.data.data para obtener directamente el array de productos
+  return res.data.data;
 }
 
 /**
@@ -93,5 +110,18 @@ export async function actualizarProducto(id, payload) {
  */
 export async function eliminarProducto(id) {
   const res = await axios.delete(`/api/productos/${id}`);
+  return res.data;
+}
+
+// Elimina productos 
+export async function eliminarProductosFiltrado(params = {}) {
+  const query = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== null && value !== undefined && value !== "")
+      query.append(key, value);
+  }
+
+  const res = await axios.delete(`/api/productos/filtrar?${query.toString()}`);
   return res.data;
 }
