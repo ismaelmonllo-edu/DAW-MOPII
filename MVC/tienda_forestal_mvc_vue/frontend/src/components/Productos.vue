@@ -18,11 +18,11 @@
     <input
       type="text"
       v-model="terminoBusqueda"
-      placeholder="Buscar por nombre, tipo o marca"
-      @keyup.enter="accionBuscar"
+      placeholder="Únicamente por nombre, tipo o marca"
+      @keyup.enter="accionEncontrar"
       class="search-input"
     />
-    <button @click="accionBuscar">Buscar</button>
+    <button @click="accionEncontrar">Search</button>
 
     <!-- ===============================
          FILTROS AVANZADOS
@@ -178,7 +178,7 @@ const cargarProductos = async () => {
    - Llama a /api/productos/buscar?termino=...
    - Se ejecuta al pulsar ENTER o el botón Buscar
    ============================================================ */
-const accionBuscar = async () => {
+const accionEncontrar = async () => {
   paginaActual.value = 1
 
   // Si no hay texto, recargamos el catálogo normal
