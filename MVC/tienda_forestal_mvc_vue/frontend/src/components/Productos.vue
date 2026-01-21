@@ -59,7 +59,7 @@
         />
         <h3>{{ p.nombre }}</h3>
         <p>{{ p.descripcion }}</p>
-        <strong>{{ parseFloat(p.precio).toFixed(2) }} €</strong><br>
+        <strong>{{ parseFloat(p.precio).toFixed(2) }} pounds</strong><br>
         <small>Stock: {{ p.stock }}</small><br>
         <small class="tipo">{{ p.tipo }} - {{ p.marca }}</small>
       </div>
