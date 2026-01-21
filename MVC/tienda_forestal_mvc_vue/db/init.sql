@@ -40,5 +40,10 @@ INSERT INTO productos (nombre, tipo, marca, descripcion, precio, stock, imagen) 
 ('Hacha Husqvarna X-Cut X162', 'hacha', 'Husqvarna', 'Hacha profesional de talá-intermedia', 69.00, 28, 'hacha_husqvarna_xcut_x162.jpg'),
 ('Maza Stanley FatMax FME-MFM18XB-1', 'maza', 'Stanley', 'Maza profesional para uso forestal con mango de fibra', 79.90, 20, 'maza_stanley_fatmax_fmemfm18xb1.jpg'),
 ('Casco Forestal Husqvarna Technical XR', 'accesorio', 'Husqvarna', 'Casco técnico con protección para tala intensiva', 99.90, 15, 'casco_husqvarna_technical_xr.jpg'),
-('Kit Limpieza Motosierra Stihl Premium', 'accesorio', 'Stihl', 'Kit de limpieza y mantenimiento para motosierra', 39.00, 30, 'kit_limpieza_motosierra_stihl_premium.jpg');
+('Kit Limpieza Motosierra Stihl Premium', 'accesorio', 'Stihl', 'Kit de limpieza y mantenimiento para motosierra', 39.00, 30, 'kit_limpieza_motosierra_stihl_premium.jpg'),
+('Auriculares Sony WH-1000XM5', 'auriculares', 'Sony', 'Auriculares inalámbricos con cancelación de ruido activa', 379.00, 25, 'auriculares_sony_wh1000xm5.jpg'),
+('Cafetera DeLonghi Magnifica S', 'cafetera', 'DeLonghi', 'Cafetera superautomática con molinillo integrado', 449.99, 12, 'cafetera_delonghi_magnifica_s.jpg'),
+('Patinete Xiaomi Electric Scooter 4', 'patinete', 'Xiaomi', 'Patinete eléctrico plegable con autonomía de 35 km', 499.00, 8, 'patinete_xiaomi_scooter4.jpg'),
+('Teclado Logitech MX Keys', 'teclado', 'Logitech', 'Teclado mecánico inalámbrico retroiluminado para productividad', 119.00, 30, 'teclado_logitech_mx_keys.jpg'),
+('Zapatillas Nike Air Max 90', 'calzado', 'Nike', 'Zapatillas deportivas clásicas con amortiguación Air', 149.90, 45, 'zapatillas_nike_airmax90.jpg');
 
