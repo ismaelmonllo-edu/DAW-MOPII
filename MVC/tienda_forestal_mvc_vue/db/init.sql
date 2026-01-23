@@ -41,9 +41,8 @@ INSERT INTO productos (nombre, tipo, marca, descripcion, precio, stock, imagen) 
 ('Maza Stanley FatMax FME-MFM18XB-1', 'maza', 'Stanley', 'Maza profesional para uso forestal con mango de fibra', 79.90, 20, 'maza_stanley_fatmax_fmemfm18xb1.jpg'),
 ('Casco Forestal Husqvarna Technical XR', 'accesorio', 'Husqvarna', 'Casco técnico con protección para tala intensiva', 99.90, 15, 'casco_husqvarna_technical_xr.jpg'),
 ('Kit Limpieza Motosierra Stihl Premium', 'accesorio', 'Stihl', 'Kit de limpieza y mantenimiento para motosierra', 39.00, 30, 'kit_limpieza_motosierra_stihl_premium.jpg'),
-('Auriculares Sony WH-1000XM5', 'auriculares', 'Sony', 'Auriculares inalámbricos con cancelación de ruido activa', 379.00, 25, 'auriculares_sony_wh1000xm5.jpg'),
-('Cafetera DeLonghi Magnifica S', 'cafetera', 'DeLonghi', 'Cafetera superautomática con molinillo integrado', 449.99, 12, 'cafetera_delonghi_magnifica_s.jpg'),
-('Patinete Xiaomi Electric Scooter 4', 'patinete', 'Xiaomi', 'Patinete eléctrico plegable con autonomía de 35 km', 499.00, 8, 'patinete_xiaomi_scooter4.jpg'),
-('Teclado Logitech MX Keys', 'teclado', 'Logitech', 'Teclado mecánico inalámbrico retroiluminado para productividad', 119.00, 30, 'teclado_logitech_mx_keys.jpg'),
-('Zapatillas Nike Air Max 90', 'calzado', 'Nike', 'Zapatillas deportivas clásicas con amortiguación Air', 149.90, 45, 'zapatillas_nike_airmax90.jpg');
-
+('Bicicleta de Montaña Scott Aspect 950', 'bicicleta', 'Scott', 'Bicicleta MTB con cuadro de aluminio y 21 velocidades', 549.00, 8, 'bicicleta_scott_aspect950.jpg'),
+('Cafetera Nespresso Vertuo Next', 'electrodomestico', 'Nespresso', 'Cafetera de cápsulas con tecnología centrifusión', 159.99, 20, 'cafetera_nespresso_vertuo.jpg'),
+('Guitarra Acústica Yamaha F310', 'instrumento', 'Yamaha', 'Guitarra acústica para principiantes con cuerdas de acero', 139.00, 15, 'guitarra_yamaha_f310.jpg'),
+('Mochila The North Face Borealis', 'equipaje', 'The North Face', 'Mochila de 28L con compartimento para portátil', 99.90, 25, 'mochila_northface_borealis.jpg'),
+('Reloj Casio G-Shock GA-2100', 'reloj', 'Casio', 'Reloj resistente a golpes con diseño octogonal', 89.00, 30, 'reloj_casio_gshock_ga2100.jpg');
